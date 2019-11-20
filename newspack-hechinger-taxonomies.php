@@ -27,8 +27,12 @@ class Newspack_Hechinger_Taxonomies {
 		add_action( 'partner_edit_form_fields', [ __CLASS__, 'edit_partner_meta_fields' ] );
 		add_action( 'edited_partner', [ __CLASS__, 'save_partner_meta_fields' ] );
 		add_action( 'create_partner', [ __CLASS__, 'save_partner_meta_fields' ] );
+		add_action( 'init', [ __CLASS__, 'add_partners_shortcode' ] );
 	}
 
+	/**
+	 * Register Partner and Special Reports taxonomies.
+	 */
 	public static function register_taxonomies() {
 		register_taxonomy(
 			'special-report',
@@ -87,7 +91,7 @@ class Newspack_Hechinger_Taxonomies {
 	}
 
 	/**
-	 * Add custom meta to the Add New Term screen.
+	 * Add custom meta to the Add New Partner screen.
 	 */
 	public static function add_partner_meta_fields() {
 		?>
@@ -118,7 +122,7 @@ class Newspack_Hechinger_Taxonomies {
 	}
 
 	/**
-	 * Add custom meta to the Edit Term screen.
+	 * Add custom meta to the Edit Partner screen.
 	 *
 	 * @param WP_Term $term Current term object.
 	 */
@@ -192,6 +196,70 @@ class Newspack_Hechinger_Taxonomies {
 		if ( $partner_url ) {
 			update_term_meta( $term_id, 'partner_homepage_url',  esc_url( $partner_url ) );
 		}
+	}
+
+	/**
+	 * Register the 'partners' shortcode.
+	 */
+	public static function add_partners_shortcode() {
+		add_shortcode( 'partners', [ __CLASS__, 'render_partners_shortcode' ] );
+	}
+
+	/**
+	 * Render the 'partners' shortcode.
+	 */
+	public static function render_partners_shortcode() {
+		$partners = get_terms( [
+			'taxonomy' => 'partner',
+			'hide_empty' => false,
+		] );
+
+		ob_start();
+
+		$num_columns = 3;
+		$columns = [ '', '', '' ];
+		$current = 0;
+		foreach ( $partners as $partner ) {
+			$partner_html = '';
+			$partner_logo = get_term_meta( $partner->term_id, 'logo', true );
+			$partner_url = get_term_meta( $partner->term_id, 'partner_homepage_url', true );
+
+			$partner_html .= '';
+			if ( $partner_logo ) {
+				$logo_html = '';
+		 		$logo_atts = wp_get_attachment_image_src( $partner_logo, 'full' );
+		 		if ( $logo_atts ) {
+		 			$logo_html = '<figure class="wp-block-image"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" /></figure>';
+		 		}
+
+		 		if ( $logo_html && $partner_url ) {
+		 			$logo_html = '<a href="' . esc_url( $partner_url ) . '">' . $logo_html . '</a>';
+		 		}
+
+		 		$partner_html .= $logo_html;
+			}
+
+			$partner_name = $partner->name;
+			if ( $partner_url ) {
+				$partner_name = '<a href="' . esc_url( $partner_url ) . '">' . $partner_name . '</a>';
+			}
+			$partner_html .= '<p class="has-text-align-center">' . $partner_name . '</p>';
+			$partner_html .= '<hr class="wp-block-separator is-style-wide">';
+
+			$columns[$current] .= $partner_html;
+			$current += 1;
+			$current = $current % $num_columns;
+		}
+		?>
+		<div class="wp-block-columns is-style-borders">
+			<?php foreach ( $columns as $column ): ?>
+				<div class="wp-block-column">
+					<?php echo wp_kses_post( $column ); ?>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 }
 Newspack_Hechinger_Taxonomies::init();
