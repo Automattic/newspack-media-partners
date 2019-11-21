@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Newspack Hechinger Taxonomies
- * Description: Custom taxonomies for backwards-compatibility with Hechinger Report.
+ * Description: Hechinger Report Partner taxonomy and integrations.
  * Version: 1.0.0
  * Author: Automattic
  * Author URI: https://newspack.blog/
@@ -28,39 +28,14 @@ class Newspack_Hechinger_Taxonomies {
 		add_action( 'edited_partner', [ __CLASS__, 'save_partner_meta_fields' ] );
 		add_action( 'create_partner', [ __CLASS__, 'save_partner_meta_fields' ] );
 		add_action( 'init', [ __CLASS__, 'add_partners_shortcode' ] );
+
+		add_filter( 'the_content', [ __CLASS__, 'add_content_partner_logo' ] );
 	}
 
 	/**
-	 * Register Partner and Special Reports taxonomies.
+	 * Register Partner taxonomy.
 	 */
 	public static function register_taxonomies() {
-		register_taxonomy(
-			'special-report',
-			'post',
-			array(
-				'hierarchical' => true,
-				'labels' => array(
-					'name'              => _x( 'Special Reports', 'taxonomy general name' ),
-					'singular_name'     => _x( 'Special Report', 'taxonomy singular name' ),
-					'search_items'      => __( 'Search Special Reports' ),
-					'all_items'         => __( 'All Special Reports' ),
-					'parent_item'       => __( 'Parent Special Report' ),
-					'parent_item_colon' => __( 'Parent Special Report:' ),
-					'edit_item'         => __( 'Edit Special Report' ),
-					'view_item'         => __( 'View Special Report' ),
-					'update_item'       => __( 'Update Special Report' ),
-					'add_new_item'      => __( 'Add New Special Report' ),
-					'new_item_name'     => __( 'New Special Report Name' ),
-					'menu_name'         => __( 'Special Reports' ),
-				),
-				'public'            => true,
-				'show_admin_column' => true,
-				'show_in_nav_menus' => true,
-				'query_var'         => true,
-				'rewrite'           => [ 'slug' => 'special-reports' ],
-				'show_in_rest'      => true,
-			)
-		);
 		register_taxonomy(
 			'partner',
 			'post',
@@ -260,6 +235,51 @@ class Newspack_Hechinger_Taxonomies {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Filter in a partner logo on posts that have partners.
+	 *
+	 * @param string $content The post content.
+	 * @return string Modified $content.
+	 */
+	public static function add_content_partner_logo( $content ) {
+		$id = get_the_ID();
+		$partners = get_the_terms( $id, 'partner' );
+		if ( ! $partners ) {
+			return $content;
+		}
+
+		$partner = $partners[0];
+		$partner_image_id = get_term_meta( $partner->term_id, 'logo', true );
+		$image = '';
+		if ( $partner_image_id ) {
+			$image = wp_get_attachment_image( $partner_image_id, [ 200, 999 ] );
+		}
+		ob_start();
+		?>
+		<div class="wp-block-group alignright">
+			<div class="wp-block-group__inner-container">
+				<figure class="wp-block-image size-full is-resized">
+					<?php echo $image; ?>
+					<figcaption>This story also appeared in <?php echo $partner->name; ?></figcaption>
+				</figure>
+			</div>
+		</div>
+
+		<?php
+		$partner_html = ob_get_clean();
+
+		$content_halves = explode( '</p>', $content, 2 );
+
+		// Just append it to the top if for some reason there are no paragraphs.
+		if ( 1 === count( $content_halves ) ) {
+			$content = $partner_html . $content;
+		} else {
+			$content = $content_halves[0] . '</p>' . $partner_html . $content_halves[1];
+		}
+
+		return $content;
 	}
 }
 Newspack_Hechinger_Taxonomies::init();
