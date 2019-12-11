@@ -191,9 +191,15 @@ class Newspack_Media_Partners {
 
 		ob_start();
 
-		$num_columns = 3;
-		$columns = [ '', '', '' ];
-		$current = 0;
+		?>
+		<style>
+			.wp-block-image.media-partner img {
+				max-height: 200px;
+			}
+		</style>
+		<?php
+
+		$elements = [];
 		foreach ( $partners as $partner ) {
 			$partner_html = '';
 			$partner_logo = get_term_meta( $partner->term_id, 'logo', true );
@@ -204,7 +210,7 @@ class Newspack_Media_Partners {
 				$logo_html = '';
 		 		$logo_atts = wp_get_attachment_image_src( $partner_logo, 'full' );
 		 		if ( $logo_atts ) {
-		 			$logo_html = '<figure class="wp-block-image"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" /></figure>';
+		 			$logo_html = '<figure class="wp-block-image media-partner"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" /></figure>';
 		 		}
 
 		 		if ( $logo_html && $partner_url ) {
@@ -219,21 +225,38 @@ class Newspack_Media_Partners {
 				$partner_name = '<a href="' . esc_url( $partner_url ) . '">' . $partner_name . '</a>';
 			}
 			$partner_html .= '<p class="has-text-align-center">' . $partner_name . '</p>';
-			$partner_html .= '<hr class="wp-block-separator is-style-wide">';
+			//$partner_html .= '<hr class="wp-block-separator is-style-wide">';
 
-			$columns[$current] .= $partner_html;
-			$current += 1;
-			$current = $current % $num_columns;
+			$elements[] = $partner_html;
 		}
-		?>
-		<div class="wp-block-columns is-style-borders">
-			<?php foreach ( $columns as $column ): ?>
-				<div class="wp-block-column">
-					<?php echo wp_kses_post( $column ); ?>
-				</div>
-			<?php endforeach; ?>
-		</div>
-		<?php
+
+		$num_columns = 3;
+		$current = 0;
+		$container_closed = true;
+		foreach ( $elements as $element ) {
+			if ( 0 == $current ) {
+				echo '<div class="wp-block-columns is-style-borders">';
+				$container_closed = false;
+			}
+
+			echo '<div class="wp-block-column">';
+			echo wp_kses_post( $element );
+			echo '</div>';
+
+			++$current;
+
+			if ( $num_columns == $current ) {
+				echo '</div><hr class="wp-block-separator is-style-wide">';
+				$current = 0;
+				$container_closed = true;
+			}
+		}
+
+		// Close last div if needed.
+		if ( ! $container_closed ) {
+			echo '</div><hr class="wp-block-separator is-style-wide">';
+		}
+
 		return ob_get_clean();
 	}
 
