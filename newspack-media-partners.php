@@ -250,58 +250,62 @@ class Newspack_Media_Partners {
 			return $content;
 		}
 
-		$partner_html = '';
+		$partner_images = [];
+		$partner_names  = [];
 		foreach ( $partners as $partner ) {
-			$partner_html = self::get_partner_content_html( $partner );
-			// Inject logo in between 2 paragraph elements.
-			$content_halves = preg_split( '#<\/p>\s*<p>#', $content, 2 );
-
-			// Just append it to the top if a good injection spot can't be found..
-			if ( 1 === count( $content_halves ) ) {
-				$content = $partner_html . $content;
-			} else {
-				$content = $content_halves[0] . '</p>' . $partner_html . '<p>' . $content_halves[1];
+			$partner_image_id = get_term_meta( $partner->term_id, 'logo', true );
+			$partner_url      = esc_url( get_term_meta( $partner->term_id, 'partner_homepage_url', true ) );
+			$image            = '';
+			if ( $partner_image_id ) {
+				$image = wp_get_attachment_image( $partner_image_id, [ 200, 999 ] );
+				if ( $image && $partner_url ) {
+					$image = '<a href="' . $partner_url . '" target="_blank">' . $image . '</a>';
+				}
 			}
-		}
 
-		return $content;
-	}
+			$partner_images[] = $image;
 
-	/**
-	 * Get markup for one partner.
-	 *
-	 * @param WP_Term $partner Partner term object.
-	 * @return string HTML
-	 */
-	protected static function get_partner_content_html( $partner ) {
-		$partner_image_id = get_term_meta( $partner->term_id, 'logo', true );
-		$partner_url      = esc_url( get_term_meta( $partner->term_id, 'partner_homepage_url', true ) );
-		$image            = '';
-		if ( $partner_image_id ) {
-			$image = wp_get_attachment_image( $partner_image_id, [ 200, 999 ] );
-			if ( $image && $partner_url ) {
-				$image = '<a href="' . $partner_url . '" target="_blank">' . $image . '</a>';
+			$partner_name = $partner->name;
+			if ( $partner_url ) {
+				$partner_name = '<a href="' . $partner_url . '" target="_blank">' . $partner_name . '</a>';
 			}
+			$partner_names[] = $partner_name;
 		}
 
-		$partner_name = $partner->name;
-		if ( $partner_url ) {
-			$partner_name = '<a href="' . $partner_url . '" target="_blank">' . $partner_name . '</a>';
-		}
 		ob_start();
 		?>
 		<div class="wp-block-group alignright">
 			<div class="wp-block-group__inner-container">
 				<figure class="wp-block-image size-full is-resized">
-					<?php echo $image; ?>
-					<figcaption><?php echo wp_kses_post( sprintf( __( 'This story also appeared in %s', 'newspack-media-partners' ), $partner_name ) ); ?></figcaption>
+					<?php echo implode( '<br/>', $partner_images ); ?>
+					<figcaption>
+						<?php 
+						echo wp_kses_post(
+							sprintf( 
+								__( 'This story also appeared in %s', 'newspack-media-partners' ),
+								implode( __( ' and ', 'newspack-media-partners' ), $partner_names )
+							)
+						); 
+						?>
+					</figcaption>
 				</figure>
 			</div>
 		</div>
 
 		<?php
 		$partner_html = ob_get_clean();
-		return $partner_html;
+
+		// Inject logo in between 2 paragraph elements.
+		$content_halves = preg_split( '#<\/p>\s*<p>#', $content, 2 );
+
+		// Just append it to the top if a good injection spot can't be found..
+		if ( 1 === count( $content_halves ) ) {
+			$content = $partner_html . $content;
+		} else {
+			$content = $content_halves[0] . '</p>' . $partner_html . '<p>' . $content_halves[1];
+		}
+
+		return $content;
 	}
 }
 Newspack_Media_Partners::init();
