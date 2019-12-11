@@ -250,7 +250,30 @@ class Newspack_Media_Partners {
 			return $content;
 		}
 
-		$partner          = $partners[0];
+		$partner_html = '';
+		foreach ( $partners as $partner ) {
+			$partner_html = self::get_partner_content_html( $partner );
+			// Inject logo in between 2 paragraph elements.
+			$content_halves = preg_split( '#<\/p>\s*<p>#', $content, 2 );
+
+			// Just append it to the top if a good injection spot can't be found..
+			if ( 1 === count( $content_halves ) ) {
+				$content = $partner_html . $content;
+			} else {
+				$content = $content_halves[0] . '</p>' . $partner_html . '<p>' . $content_halves[1];
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Get markup for one partner.
+	 *
+	 * @param WP_Term $partner Partner term object.
+	 * @return string HTML
+	 */
+	protected static function get_partner_content_html( $partner ) {
 		$partner_image_id = get_term_meta( $partner->term_id, 'logo', true );
 		$partner_url      = esc_url( get_term_meta( $partner->term_id, 'partner_homepage_url', true ) );
 		$image            = '';
@@ -278,18 +301,7 @@ class Newspack_Media_Partners {
 
 		<?php
 		$partner_html = ob_get_clean();
-
-		// Inject logo in between 2 paragraph elements.
-		$content_halves = preg_split( '#<\/p>\s*<p>#', $content, 2 );
-
-		// Just append it to the top if for some reason there are no paragraphs.
-		if ( 1 === count( $content_halves ) ) {
-			$content = $partner_html . $content;
-		} else {
-			$content = $content_halves[0] . '</p>' . $partner_html . '<p>' . $content_halves[1];
-		}
-
-		return $content;
+		return $partner_html;
 	}
 }
 Newspack_Media_Partners::init();
