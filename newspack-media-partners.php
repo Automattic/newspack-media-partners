@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Newspack Media Partners
- * Description: Add media partners and their logos to posts.
+ * Description: Add media partners and their logos to posts. Intended for posts published in conjunction with other outlets.
  * Version: 1.0.0
  * Author: Automattic
  * Author URI: https://newspack.blog/
@@ -262,7 +262,7 @@ class Newspack_Media_Partners {
 			<div class="wp-block-group__inner-container">
 				<figure class="wp-block-image size-full is-resized">
 					<?php echo $image; ?>
-					<figcaption>This story also appeared in <?php echo $partner->name; ?></figcaption>
+					<figcaption><?php echo esc_html( sprintf( __( 'This story also appeared in %s', 'newspack-media-partners' ), $partner->name ) ); ?></figcaption>
 				</figure>
 			</div>
 		</div>
