@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: Newspack Hechinger Taxonomies
- * Description: Hechinger Report Partner taxonomy and integrations.
+ * Plugin Name: Newspack Media Partners
+ * Description: Add media partners and their logos to posts.
  * Version: 1.0.0
  * Author: Automattic
  * Author URI: https://newspack.blog/
  * License: GPL2
- * Text Domain: newspack-hechinger-taxonomies
+ * Text Domain: newspack-media-partners
  * Domain Path: /languages/
  */
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Manages the whole show.
  */
-class Newspack_Hechinger_Taxonomies {
+class Newspack_Media_Partners {
 
 	/**
 	 * Initialize everything.
@@ -42,18 +42,18 @@ class Newspack_Hechinger_Taxonomies {
 			array(
 				'hierarchical' => true,
 				'labels' => array(
-					'name'              => _x( 'Partners', 'taxonomy general name' ),
-					'singular_name'     => _x( 'Partner', 'taxonomy singular name' ),
-					'search_items'      => __( 'Search Partners' ),
-					'all_items'         => __( 'All Partners' ),
-					'parent_item'       => __( 'Parent Partner' ),
-					'parent_item_colon' => __( 'Parent Partner:' ),
-					'edit_item'         => __( 'Edit Partner' ),
-					'view_item'         => __( 'View Partner' ),
-					'update_item'       => __( 'Update Partner' ),
-					'add_new_item'      => __( 'Add New Partner' ),
-					'new_item_name'     => __( 'New Partner Name' ),
-					'menu_name'         => __( 'Partners' ),
+					'name'              => _x( 'Media Partners', 'taxonomy general name' ),
+					'singular_name'     => _x( 'Media Partner', 'taxonomy singular name' ),
+					'search_items'      => __( 'Search Media Partners' ),
+					'all_items'         => __( 'All Media Partners' ),
+					'parent_item'       => __( 'Parent Media Partner' ),
+					'parent_item_colon' => __( 'Parent Media Partner:' ),
+					'edit_item'         => __( 'Edit Media Partner' ),
+					'view_item'         => __( 'View Media Partner' ),
+					'update_item'       => __( 'Update Media Partner' ),
+					'add_new_item'      => __( 'Add New Media Partner' ),
+					'new_item_name'     => __( 'New Media Partner Name' ),
+					'menu_name'         => __( 'Media Partners' ),
 				),
 				'public'            => true,
 				'show_admin_column' => true,
@@ -282,4 +282,4 @@ class Newspack_Hechinger_Taxonomies {
 		return $content;
 	}
 }
-Newspack_Hechinger_Taxonomies::init();
+Newspack_Media_Partners::init();
