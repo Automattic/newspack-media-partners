@@ -73,7 +73,11 @@ class Newspack_Media_Partners {
 		<div class="form-field">
 			<label for="partner_logo"><?php esc_html_e( 'Partner Logo:', 'newspack-media-partners' ); ?></label>
 			<input type="hidden" name="partner_logo" id="partner_logo" value="" />
+<<<<<<< HEAD
 			<input class="upload_image_button button" name="add_partner_logo" id="add_partner_logo" type="button" value="<?php esc_attr_e( 'Select/Upload Image', 'newspack-media-partners' ); ?>" />
+=======
+			<input class="upload_image_button button" name="add_partner_logo" id="add_partner_logo" type="button" value="<?php _e( 'Select/Upload Image', 'newspack-media-partners' ); ?>" />
+>>>>>>> 5b8f12a60c202625cb1c93824676b307e8b4ef07
 			<img src='' id='partner_logo_preview' style='max-width: 250px; width: 100%; height: auto' />
 			<script>
 				jQuery( document ).ready( function() {
