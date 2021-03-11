@@ -302,13 +302,14 @@ class Newspack_Media_Partners {
 				<figure class="wp-block-image size-full is-resized">
 					<?php echo implode( '<br/>', $partner_images ); ?>
 					<figcaption>
-						<?php 
+						<?php
 						echo wp_kses_post(
-							sprintf( 
+							sprintf(
+								/* translators: replaced with the name of the Media Partner, linked */
 								__( 'This story also appeared in %s', 'newspack-media-partners' ),
 								implode( __( ' and ', 'newspack-media-partners' ), $partner_names )
 							)
-						); 
+						);
 						?>
 					</figcaption>
 				</figure>
