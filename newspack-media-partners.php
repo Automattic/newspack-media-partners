@@ -42,18 +42,18 @@ class Newspack_Media_Partners {
 			array(
 				'hierarchical' => true,
 				'labels' => array(
-					'name'              => _x( 'Media Partners', 'taxonomy general name' ),
-					'singular_name'     => _x( 'Media Partner', 'taxonomy singular name' ),
-					'search_items'      => __( 'Search Media Partners' ),
-					'all_items'         => __( 'All Media Partners' ),
-					'parent_item'       => __( 'Parent Media Partner' ),
-					'parent_item_colon' => __( 'Parent Media Partner:' ),
-					'edit_item'         => __( 'Edit Media Partner' ),
-					'view_item'         => __( 'View Media Partner' ),
-					'update_item'       => __( 'Update Media Partner' ),
-					'add_new_item'      => __( 'Add New Media Partner' ),
-					'new_item_name'     => __( 'New Media Partner Name' ),
-					'menu_name'         => __( 'Media Partners' ),
+					'name'              => esc_html_x( 'Media Partners', 'taxonomy general name', 'newspack-media-partners' ),
+					'singular_name'     => esc_html_x( 'Media Partner', 'taxonomy singular name', 'newspack-media-partners' ),
+					'search_items'      => esc_html__( 'Search Media Partners', 'newspack-media-partners' ),
+					'all_items'         => esc_html__( 'All Media Partners', 'newspack-media-partners' ),
+					'parent_item'       => esc_html__( 'Parent Media Partner', 'newspack-media-partners' ),
+					'parent_item_colon' => esc_html__( 'Parent Media Partner:', 'newspack-media-partners' ),
+					'edit_item'         => esc_html__( 'Edit Media Partner', 'newspack-media-partners' ),
+					'view_item'         => esc_html__( 'View Media Partner', 'newspack-media-partners' ),
+					'update_item'       => esc_html__( 'Update Media Partner', 'newspack-media-partners' ),
+					'add_new_item'      => esc_html__( 'Add New Media Partner', 'newspack-media-partners' ),
+					'new_item_name'     => esc_html__( 'New Media Partner Name', 'newspack-media-partners' ),
+					'menu_name'         => esc_html__( 'Media Partners' ),
 				),
 				'public'            => true,
 				'show_admin_column' => true,
@@ -71,9 +71,9 @@ class Newspack_Media_Partners {
 	public static function add_partner_meta_fields() {
 		?>
 		<div class="form-field">
-			<label for="partner_logo"><?php _e( 'Partner Logo:' ); ?></label>
+			<label for="partner_logo"><?php esc_html_e( 'Partner Logo:', 'newspack-media-partners' ); ?></label>
 			<input type="hidden" name="partner_logo" id="partner_logo" value="" />
-			<input class="upload_image_button button" name="add_partner_logo" id="add_partner_logo" type="button" value="Select/Upload Image" />
+			<input class="upload_image_button button" name="add_partner_logo" id="add_partner_logo" type="button" value="<?php esc_attr_e( 'Select/Upload Image', 'newspack-media-partners' ); ?>" />
 			<img src='' id='partner_logo_preview' style='max-width: 250px; width: 100%; height: auto' />
 			<script>
 				jQuery( document ).ready( function() {
@@ -90,7 +90,7 @@ class Newspack_Media_Partners {
 		</div>
 
 		<div class="form-field">
-			<label for="partner_logo"><?php _e( 'Partner URL:' ); ?></label>
+			<label for="partner_logo"><?php esc_html_e( 'Partner URL:', 'newspack-media-partners' ); ?></label>
 			<input type="text" name="partner_url" value="" />
 		</div>
 		<?php
@@ -115,10 +115,10 @@ class Newspack_Media_Partners {
 
 		?>
 		<tr class="form-field">
-			<th scope="row" valign="top"><label for="add_partner_logo"><?php _e( 'Partner Logo' ); ?></label></th>
+			<th scope="row" valign="top"><label for="add_partner_logo"><?php esc_html_e( 'Partner Logo', 'newspack-media-partners' ); ?></label></th>
 			<td>
 				<input type="hidden" name="partner_logo" id="partner_logo" value="<?php echo esc_attr( $logo_id ); ?>" />
-				<input class="upload_image_button button" name="add_partner_logo" id="add_partner_logo" type="button" value="Select/Upload Image" />
+				<input class="upload_image_button button" name="add_partner_logo" id="add_partner_logo" type="button" value="<?php esc_attr_e( 'Select/Upload Image', 'newspack-media-partners' ); ?>" />
 			</td>
 		</tr>
 		<tr class="form-field">
@@ -144,7 +144,7 @@ class Newspack_Media_Partners {
 		</tr>
 
 		<tr class="form-field">
-			<th scope="row" valign="top"><label for="partner_url"><?php _e( 'Partner URL' ); ?></label></th>
+			<th scope="row" valign="top"><label for="partner_url"><?php esc_html_e( 'Partner URL', 'newspack-media-partners' ); ?></label></th>
 			<td>
 				<input type="text" name="partner_url" value="<?php echo esc_attr( $partner_url ); ?>" />
 			</td>
@@ -302,13 +302,14 @@ class Newspack_Media_Partners {
 				<figure class="wp-block-image size-full is-resized">
 					<?php echo implode( '<br/>', $partner_images ); ?>
 					<figcaption>
-						<?php 
+						<?php
 						echo wp_kses_post(
-							sprintf( 
+							sprintf(
+								/* translators: replaced with the name of the Media Partner, linked */
 								__( 'This story also appeared in %s', 'newspack-media-partners' ),
-								implode( __( ' and ', 'newspack-media-partners' ), $partner_names )
+								implode( esc_html__( ' and ', 'newspack-media-partners' ), $partner_names )
 							)
-						); 
+						);
 						?>
 					</figcaption>
 				</figure>
