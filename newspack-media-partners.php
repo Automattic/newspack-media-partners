@@ -210,7 +210,7 @@ class Newspack_Media_Partners {
 				$logo_html = '';
 		 		$logo_atts = wp_get_attachment_image_src( $partner_logo, 'full' );
 		 		if ( $logo_atts ) {
-		 			$logo_html = '<figure class="wp-block-image media-partner"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" /></figure>';
+		 			$logo_html = '<figure class="wp-block-image newspack-media-partners media-partner"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" /></figure>';
 		 		}
 
 		 		if ( $logo_html && $partner_url ) {
@@ -297,7 +297,7 @@ class Newspack_Media_Partners {
 
 		ob_start();
 		?>
-		<div class="wp-block-group alignright">
+		<div class="wp-block-group alignright newspack-media-partners">
 			<div class="wp-block-group__inner-container">
 				<figure class="wp-block-image size-full is-resized">
 					<?php echo implode( '<br/>', $partner_images ); ?>
