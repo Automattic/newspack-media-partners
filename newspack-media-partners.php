@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Newspack Media Partners
  * Description: Add media partners and their logos to posts. Intended for posts published in conjunction with other outlets.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Automattic
  * Author URI: https://newspack.blog/
  * License: GPL2
