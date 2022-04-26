@@ -208,16 +208,16 @@ class Newspack_Media_Partners {
 			$partner_html .= '';
 			if ( $partner_logo ) {
 				$logo_html = '';
-		 		$logo_atts = wp_get_attachment_image_src( $partner_logo, 'full' );
-		 		if ( $logo_atts ) {
-		 			$logo_html = '<figure class="wp-block-image newspack-media-partners media-partner"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" /></figure>';
-		 		}
+				$logo_atts = wp_get_attachment_image_src( $partner_logo, 'full' );
+				if ( $logo_atts ) {
+					$logo_html = '<figure class="wp-block-image newspack-media-partners media-partner"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" alt="' . esc_attr( $partner->name ) . '" /></figure>';
+				}
 
-		 		if ( $logo_html && $partner_url ) {
-		 			$logo_html = '<a href="' . esc_url( $partner_url ) . '">' . $logo_html . '</a>';
-		 		}
+				if ( $logo_html && $partner_url ) {
+					$logo_html = '<a href="' . esc_url( $partner_url ) . '">' . $logo_html . '</a>';
+				}
 
-		 		$partner_html .= $logo_html;
+				$partner_html .= $logo_html;
 			}
 
 			$partner_name = $partner->name;
@@ -280,7 +280,7 @@ class Newspack_Media_Partners {
 			$partner_url      = esc_url( get_term_meta( $partner->term_id, 'partner_homepage_url', true ) );
 			$image            = '';
 			if ( $partner_image_id ) {
-				$image = wp_get_attachment_image( $partner_image_id, [ 200, 999 ] );
+				$image = wp_get_attachment_image( $partner_image_id, [ 200, 999 ], false, [ 'alt' => esc_attr( $partner->name ) ] );
 				if ( $image && $partner_url ) {
 					$image = '<a href="' . $partner_url . '" target="_blank">' . $image . '</a>';
 				}
