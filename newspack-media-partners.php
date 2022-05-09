@@ -208,16 +208,26 @@ class Newspack_Media_Partners {
 			$partner_html .= '';
 			if ( $partner_logo ) {
 				$logo_html = '';
-		 		$logo_atts = wp_get_attachment_image_src( $partner_logo, 'full' );
-		 		if ( $logo_atts ) {
-		 			$logo_html = '<figure class="wp-block-image newspack-media-partners media-partner"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" /></figure>';
-		 		}
+				$logo_atts = wp_get_attachment_image_src( $partner_logo, 'full' );
+				$logo_alt  = $partner->name;
+				
+				if ( $partner_url ) {
+					$logo_alt  = sprintf(
+						/* translators: replaced with the name of the Media Partner */
+						__( 'Website for %s', 'newspack-media-partners' ),
+						$partner->name
+					);
+				}
 
-		 		if ( $logo_html && $partner_url ) {
-		 			$logo_html = '<a href="' . esc_url( $partner_url ) . '">' . $logo_html . '</a>';
-		 		}
+				if ( $logo_atts ) {
+					$logo_html = '<figure class="wp-block-image newspack-media-partners media-partner"><img class="aligncenter" src="' . esc_attr( $logo_atts[0] ) . '" alt="' . esc_attr( $logo_alt ) . '" /></figure>';
+				}
 
-		 		$partner_html .= $logo_html;
+				if ( $logo_html && $partner_url ) {
+					$logo_html = '<a href="' . esc_url( $partner_url ) . '">' . $logo_html . '</a>';
+				}
+
+				$partner_html .= $logo_html;
 			}
 
 			$partner_name = $partner->name;
@@ -279,8 +289,18 @@ class Newspack_Media_Partners {
 			$partner_image_id = get_term_meta( $partner->term_id, 'logo', true );
 			$partner_url      = esc_url( get_term_meta( $partner->term_id, 'partner_homepage_url', true ) );
 			$image            = '';
+			$image_alt        = $partner->name;
+			
+			if ( $partner_url ) {
+				$image_alt = sprintf(
+					/* translators: replaced with the name of the Media Partner */
+					__( 'Website for %s', 'newspack-media-partners' ),
+					$partner->name
+				);
+			}
+
 			if ( $partner_image_id ) {
-				$image = wp_get_attachment_image( $partner_image_id, [ 200, 999 ] );
+				$image = wp_get_attachment_image( $partner_image_id, [ 200, 999 ], false, [ 'alt' => esc_attr( $image_alt ) ] );
 				if ( $image && $partner_url ) {
 					$image = '<a href="' . $partner_url . '" target="_blank">' . $image . '</a>';
 				}
