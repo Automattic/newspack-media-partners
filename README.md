@@ -1,3 +1,7 @@
+# Archived, this featureset is now part of Newspack Plugin (https://github.com/Automattic/newspack-plugin/pull/2753)
+
+---
+
 # Newspack Media Partners
 
 Adds a Media Partners taxonomy. Media partners can be created and assigned to posts, and are intended for posts published in conjunction with other outlets. The media partner's logo will be automatically injected into the post content along with a "This story also appeared in [Media Partner]" message. 
